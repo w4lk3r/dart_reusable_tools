@@ -7,10 +7,23 @@ class SecurityTools {
 
   final _secureRandom = Random.secure();
 
+  String randomPassphrase({
+    String separator = '-',
+    int length = 4,
+    bool includeNumber = false,
+  }) {
+    final count = length < 4 ? 4 : length;
+    final generate = List.generate(
+      count,
+      (_) => englishWords[_secureRandom.nextInt(englishWords.length)],
+    );
+    return generate.join(separator);
+  }
+
   /// Always provide random password with minimal 8 character
   ///
-  /// If all option set to false, it will produce default behaviour
-  String getRandomPassword({
+  /// If all include option set to false, it will produce default behaviour
+  String randomPassword({
     int length = 8,
     bool includeUppercase = true,
     bool includeLowecase = true,
@@ -23,18 +36,20 @@ class SecurityTools {
     const t = r'!@#$%^&*';
     const u = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const v = 'abcdefghijklmnopqrstuvwxyz';
-    const w = s + t + u + v;
+    final w = (v + u + t + s).split('')..shuffle(_secureRandom);
 
     final number = includeDigits ? s : '';
     final special = includeSpecialCharacter ? t : '';
     final upperAlp = includeUppercase ? u : '';
     final lowerAlp = includeLowecase ? v : '';
-    final combine = lowerAlp + upperAlp + number + special;
+    final combine = (lowerAlp + upperAlp + number + special).split('')
+      ..shuffle(_secureRandom);
+
+    final finalString = combine.isNotEmpty ? combine : w;
 
     return List.generate(
       count,
-      (_) => (combine.isNotEmpty ? combine : w)[
-          _secureRandom.nextInt((combine.isNotEmpty ? combine : w).length)],
+      (_) => finalString[_secureRandom.nextInt(finalString.length)],
     ).join();
   }
 

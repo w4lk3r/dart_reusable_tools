@@ -11,13 +11,14 @@ class NetworkTools {
 
   static _LogConfig? _logConfig;
 
-  _HttpClient get client => _HttpClient();
+  static _HttpClient get client => _HttpClient();
 }
 
-void initLog(NetworkTools network) {
+void initLog() {
   final logConfig = NetworkTools.logConfig;
+  final client = NetworkTools.client;
   if (logConfig.enableLog) {
-    network.client.interceptors.add(
+    client.interceptors.add(
       LogInterceptor(
         requestBody: logConfig.showRequestBody,
         responseBody: logConfig.showResponseBody,
@@ -274,11 +275,10 @@ class FileTransferProgress {
 
   @override
   String toString() {
-    final currentDisplay = useBinaryPrefix
-        ? current!.doByteToBinaryPrefix
-        : current!.doByteToSIUnit;
+    final currentDisplay =
+        useBinaryPrefix ? current!.bytesToBinaryPrefix : current!.bytesToSIUnit;
     final totalDisplay =
-        useBinaryPrefix ? total!.doByteToBinaryPrefix : total!.doByteToSIUnit;
+        useBinaryPrefix ? total!.bytesToBinaryPrefix : total!.bytesToSIUnit;
 
     return '${isUpload ? 'Uploading' : 'Downloading'} $name => $currentDisplay/$totalDisplay';
   }

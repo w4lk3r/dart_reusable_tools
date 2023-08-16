@@ -13,24 +13,24 @@ extension StringExt on String {
   Uri get toUri => Uri.parse(this);
   Uri? get toUriNull => Uri.tryParse(this);
 
-  List<int> get toUtf8 => utf8.encode(this);
+  List<int> get utf8EncodedBytes => utf8.encode(this);
 
-  String get toUrlEncodedBase64 => base64Url.encode(toUtf8);
+  String get base64UrlSafeString => base64Url.encode(utf8EncodedBytes);
 
-  String get toBase64 => base64.encode(utf8.encode(this));
+  String get base64String => base64.encode(utf8.encode(this));
 
-  List<String> get doSplitDot => split('.');
-  List<String> get doSplitSpace => split(' ');
+  List<String> get splitDot => split('.');
+  List<String> get splitSpace => split(' ');
 
-  dynamic get toJsonObject => json.decode(this);
+  dynamic get jsonObject => json.decode(this);
 
-  bool get isContainsDot => contains('.');
+  bool get containsDot => contains('.');
 
   String get doCapitalizeWord =>
       this[0].toUpperCase() + substring(1).toLowerCase();
 
   String get doCapitalizeEachWordInSentence =>
-      doClean.doSplitSpace.map((e) => e.doCapitalizeWord).doJoinSpace;
+      doClean.splitSpace.map((e) => e.doCapitalizeWord).joinSpace;
 
   String get doClean => trim().replaceAll(RegExp(r'\s{2,}|[\t\r\n]'), ' ');
 }

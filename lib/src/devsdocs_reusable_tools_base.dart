@@ -21,3 +21,4 @@ part 'extension/date_time.dart';
 part 'tools/security.dart';
 part 'tools/timer.dart';
 part 'tools/network.dart';
+part 'tools/words.dart';

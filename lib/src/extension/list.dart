@@ -1,24 +1,24 @@
 part of '../devsdocs_reusable_tools_base.dart';
 
 extension ListOfStringExt on List<String> {
-  String get doJoinPath {
+  String get joinPath {
     final pathSeparator = Platform.pathSeparator;
     return join(pathSeparator);
   }
 
-  String get doJoinDot => join('.');
-  String get doJoinComma => join(',');
-  String get doJoinSpace => join(' ');
+  String get joinDot => join('.');
+  String get joinComma => join(',');
+  String get joinSpace => join(' ');
 }
 
 extension IterableExt on Iterable<String> {
-  String get doJoinSpace => toList().doJoinSpace;
+  String get joinSpace => toList().joinSpace;
 }
 
 extension ListOfMapOfStringDynamicExt on List<dynamic> {
-  String get getJsonString => json.encode(this);
+  String get toJsonString => json.encode(this);
 }
 
 extension ListOfIntExt on List<int> {
-  String get getDecodedString => utf8.decode(this);
+  String get utf8DecodedString => utf8.decode(this);
 }
