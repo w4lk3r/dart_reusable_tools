@@ -25,11 +25,11 @@ class SecurityTools {
     const v = 'abcdefghijklmnopqrstuvwxyz';
     const w = s + t + u + v;
 
-    final num = includeDigits ? s : '';
+    final number = includeDigits ? s : '';
     final special = includeSpecialCharacter ? t : '';
     final upperAlp = includeUppercase ? u : '';
     final lowerAlp = includeLowecase ? v : '';
-    final combine = lowerAlp + upperAlp + num + special;
+    final combine = lowerAlp + upperAlp + number + special;
 
     return List.generate(
       count,
@@ -46,7 +46,7 @@ class SecurityTools {
   ///
   /// If [nameSpace] is provided and invalid, will use [Uuid.NAMESPACE_URL] or random [uuidV4] based on [useRandomNameSpaceWhenInvalid] flags
   String getUuidV5(
-    String word, {
+    String stringToBeEncrypted, {
     String nameSpace = Uuid.NAMESPACE_URL,
     bool useRandomNameSpaceWhenInvalid = false,
   }) {
@@ -58,6 +58,6 @@ class SecurityTools {
             ? uuidV4
             : Uuid.NAMESPACE_URL;
 
-    return _uuid.v5(finalNameSpace, word);
+    return _uuid.v5(finalNameSpace, stringToBeEncrypted);
   }
 }

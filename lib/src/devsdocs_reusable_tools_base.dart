@@ -20,8 +20,4 @@ part 'extension/date_time.dart';
 
 part 'tools/security.dart';
 part 'tools/timer.dart';
-
-part 'extension.dart';
-part 'raw_http.dart';
-part 'http_logger.dart';
-part 'transfer_progress.dart';
+part 'tools/network.dart';

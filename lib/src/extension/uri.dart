@@ -1,11 +1,11 @@
 part of '../devsdocs_reusable_tools_base.dart';
 
 extension UriExt on Uri {
-  String get fileNameAndExt => pathSegments.last;
-  String get fileName => fileNameAndExt.containsDot
-      ? fileNameAndExt.splitDot.first
-      : fileNameAndExt;
-  String get fileExt => fileNameAndExt.containsDot
-      ? fileNameAndExt.splitDot.last
-      : fileNameAndExt;
+  String get getFileNameAndExtension => pathSegments.last;
+  String get getFileName => getFileNameAndExtension.isContainsDot
+      ? getFileNameAndExtension.doSplitDot.first
+      : getFileNameAndExtension;
+  String get getFileExtension => getFileNameAndExtension.isContainsDot
+      ? getFileNameAndExtension.doSplitDot.last
+      : getFileNameAndExtension;
 }
