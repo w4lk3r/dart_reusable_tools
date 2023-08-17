@@ -48,5 +48,5 @@ All extension have Async version if supported.
 
 ### If neccesary, only import what you need
 ```dart
-import 'package:devsdocs_reusable_tools/devsdocs_reusable_tools.dart' show SecurityTools;
+import 'package:reusable_tools/reusable_tools.dart' show SecurityTools;
 ```
