@@ -2,39 +2,51 @@
 ## Feel free to fork and/or modify! (For your lazy mode)
 All extension have Async version if supported.
 
-### Extension dart:core
+### Extension of `dart:core`
 - Map
-  - toJsonString: Convert to JSON String
+  - (String,dynamic => String) `toJsonString`: Convert to JSON String
+
 - List
-  - toJsonString: Convert to JSON String
+  - (dynamic => String) `toJsonString`: Convert to JSON String
+  - (String => String) `joinPath`: Join list with current platform separator character as separator
+  - (String => String) `joinComma`: Join list with comma (,) character as separator
+  - (String => String) `joinDot`: Join list with dot (.) character as separator
+  - (String => String) `joinSpace`: Join list with a single space character as separator
+
 - String
-  - toJsonObject: Convert to JSON Object
-### Extension dart:io
+  - (=> dynamic) `toJsonObject`: Convert to JSON Object
+
+- double
+  - (=> num) `toIntIfTrue`: Returning an int if double evenly divisible by 1
+  - (=> double) `toPrecision(...)`: Returning double value with precision digit(s) up to given value
+
+- int
+  - (=> String) `bytesToBinaryPrefix`: Convert bytes unit in integer to human readable value in Binary Prefix standart
+  - (=> String) `bytesToSIUnit`: Convert bytes unit in integer to human readable value in SI standart
+
+### Extension of `dart:io`
 - File
-  - getSha256: SHA256 of file
-  - getSha1: SHA1 of file
-  - getMd5: MD5 of file
-  - getBase64: Base64 of file
+  - (=> String) `toSha256`: SHA256 of file
+  - (=> String) `toSha1`: SHA1 of file
+  - (=> String) `toMd5`: MD5 of file
+  - (=> String) `toBase64`: Base64 of file
 - Directory
-  - check: check if exist, if not then create
+  - (=> Direcory) `doCheck`: check if exist, if not then create
+
+### Tools
+- `SecurityTools` class
+  - Object (=> double) `checkPasswordStrength(...)`: Check password strength in double, 0 to 1.
+  - Object (=> String) `generatePassphrase(...)`: Generate english words passphrase.
+  - Object (=> String) `generatePassword(...)`: Generate password.
+  - Object (=> String) `getUuidV5(...)`: Get Uuid V5
+  - Object (=> String) `getUuidV4` (getter): Get Uuid V4
+  - Object (=> String) `getUuidV1` (getter): Get Uuid V1
+
+- `NetworkTools` class
+  - Static (=> _LogConfig()) `logConfig` (getter/setter): Network client logger
+  - Static (=> _HttpClient()) `client` (getter): Network client
 
 ### If neccesary, only import what you need
 ```dart
 import 'package:devsdocs_reusable_tools/devsdocs_reusable_tools.dart' show SecurityTools;
 ```
-
-DoExtension: Add a method do to perform an action on the object.
-
-GetExtension: Add a method get to retrieve a value from the object.
-
-ToExtension: Add a method to to convert the object to a specific type.
-
-MapExtension: Add a method map to transform the object's data using a function.
-
-RunExtension: Add a method run to execute an operation using the object.
-
-SetExtension: Add a method set to modify the object's properties.
-
-WithExtension: Add a method with to combine the object with another.
-
-IsExtension: Check

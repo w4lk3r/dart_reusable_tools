@@ -12,22 +12,20 @@ class NetworkTools {
   static _LogConfig? _logConfig;
 
   static _HttpClient get client => _HttpClient();
-}
 
-void initLog() {
-  final logConfig = NetworkTools.logConfig;
-  final client = NetworkTools.client;
-  if (logConfig.enableLog) {
-    client.interceptors.add(
-      LogInterceptor(
-        requestBody: logConfig.showRequestBody,
-        responseBody: logConfig.showResponseBody,
-        error: logConfig.showError,
-        request: logConfig.showRequest,
-        requestHeader: logConfig.showRequestHeader,
-        responseHeader: logConfig.showResponseHeader,
-      ),
-    );
+  static void initLog() {
+    if (logConfig.enableLog) {
+      client.interceptors.add(
+        LogInterceptor(
+          requestBody: logConfig.showRequestBody,
+          responseBody: logConfig.showResponseBody,
+          error: logConfig.showError,
+          request: logConfig.showRequest,
+          requestHeader: logConfig.showRequestHeader,
+          responseHeader: logConfig.showResponseHeader,
+        ),
+      );
+    }
   }
 }
 
@@ -88,18 +86,18 @@ class _HttpClient {
 
   Future<dynamic> downloadUri(
     Uri uri,
-    String saveDestinaton, {
+    File destinatonFile, {
     required FileTransferProgress fileTransferProgress,
   }) =>
       download(
         '$uri',
-        saveDestinaton,
+        destinatonFile,
         fileTransferProgress: fileTransferProgress,
       );
 
   Future<dynamic> download(
     String path,
-    String saveDestinaton, {
+    File destinatonFile, {
     required FileTransferProgress fileTransferProgress,
   }) async {
     dynamic data;
@@ -107,7 +105,7 @@ class _HttpClient {
     try {
       return data = (await _dio.download(
         path,
-        saveDestinaton,
+        destinatonFile.path,
         onReceiveProgress: (current, total) => transferProgress
             .add(fileTransferProgress.copyWith(current: current, total: total)),
       ))

@@ -22,9 +22,11 @@ extension StringExt on String {
   List<String> get splitDot => split('.');
   List<String> get splitSpace => split(' ');
 
-  dynamic get jsonObject => json.decode(this);
+  dynamic get toJsonObject => json.decode(this);
 
   bool get containsDot => contains('.');
+  bool get containsSlash => contains('/');
+  bool get containsBackSlash => contains(r'\');
 
   String get doCapitalizeWord =>
       this[0].toUpperCase() + substring(1).toLowerCase();

@@ -2,14 +2,14 @@ part of '../devsdocs_reusable_tools_base.dart';
 
 extension DoubleExt on double {
   num toPrecision(int fractionDigits) {
-    if (isInt) return toInt();
+    if (_canBeInt) return toInt();
     final mod = pow(10, fractionDigits.toDouble()).toDouble();
     return (this * mod).round().toDouble() / mod;
   }
 
-  bool get isInt => this % 1 == 0;
+  bool get _canBeInt => this % 1 == 0;
 
-  num get toIntIfTrue => isInt ? toInt() : this;
+  num get toIntIfTrue => _canBeInt ? toInt() : this;
 }
 
 extension IntExt on int {
