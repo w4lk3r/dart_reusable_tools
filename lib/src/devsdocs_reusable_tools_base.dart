@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
 

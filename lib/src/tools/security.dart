@@ -4,7 +4,7 @@ class SecurityTools {
   factory SecurityTools() => _instance ??= SecurityTools._internal();
   SecurityTools._internal()
       : _englishWords = File(
-          [Directory.current.path, 'lib', 'src', 'tools', 'words.txt'].joinPath,
+          [current, 'lib', 'src', 'tools', 'words.txt'].joinPath,
         ).readAsLinesSync();
   static SecurityTools? _instance;
 
@@ -15,7 +15,7 @@ class SecurityTools {
   /// [separator] always contain single character, if non special character detected, it will use default separator
   ///
   /// The passphrase words produced is never repeated
-  String randomPassphrase({
+  String generatePassphrase({
     String separator = '-',
     int length = 4,
     bool capitalizeEachWord = false,
@@ -25,14 +25,14 @@ class SecurityTools {
     if (!pattern.hasMatch(sep)) {
       sep = '-';
     }
-    final count = length < 4 ? 4 : length;
+    final count = max(length, 4);
     final generate = List.generate(
       count,
       (_) => _englishWords[Random.secure().nextInt(_englishWords.length)],
     );
 
     if (generate.toSet().length != generate.length) {
-      return randomPassphrase(
+      return generatePassphrase(
         separator: separator,
         length: length,
         capitalizeEachWord: capitalizeEachWord,
