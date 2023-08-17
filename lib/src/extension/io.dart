@@ -1,4 +1,4 @@
-part of '../devsdocs_reusable_tools_base.dart';
+part of '../reusable_tools_base.dart';
 
 extension FileExt on File {
   /// Get unique file ID using [sha256]

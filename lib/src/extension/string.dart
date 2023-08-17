@@ -1,4 +1,4 @@
-part of '../devsdocs_reusable_tools_base.dart';
+part of '../reusable_tools_base.dart';
 
 extension StringExt on String {
   int get toInt => int.parse(this);

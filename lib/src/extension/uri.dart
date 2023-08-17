@@ -1,4 +1,4 @@
-part of '../devsdocs_reusable_tools_base.dart';
+part of '../reusable_tools_base.dart';
 
 extension UriExt on Uri {
   String get getFileNameAndExtension => pathSegments.last;

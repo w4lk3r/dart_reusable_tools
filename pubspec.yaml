@@ -1,4 +1,4 @@
-name: devsdocs_reusable_tools
+name: reusable_tools
 description: Personal Reusable Tools. Feel free to modify.
 version: 1.0.2
 repository: https://github.com/devsdocs/dart_reusable_tools
@@ -7,11 +7,11 @@ environment:
   sdk: ^3.0.6
 
 dependencies:
-  crypto:
-  dio:
-  english_words_300k:
-  jiffy:
-  uuid:
+  crypto: ^3.0.3
+  dio: ^5.3.2
+  english_words_300k: ^1.0.0
+  jiffy: ^6.2.1
+  uuid: ^3.0.7
 
 dev_dependencies:
   lint: ^2.0.0

@@ -1,4 +1,4 @@
-part of '../devsdocs_reusable_tools_base.dart';
+part of '../reusable_tools_base.dart';
 
 extension DoubleExt on double {
   num toPrecision(int fractionDigits) {
