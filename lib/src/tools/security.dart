@@ -7,17 +7,25 @@ class SecurityTools {
 
   final _secureRandom = Random.secure();
 
+  /// Always provide passphrase with minimal 4 english words containing 4 letters
+  ///
+  /// [separator] always contain single character, if non special character detected, it will use default separator
   String randomPassphrase({
     String separator = '-',
     int length = 4,
-    bool includeNumber = false,
+    bool capitalizeEachWord = false,
   }) {
+    String sep = separator.length > 1 ? separator[0] : separator;
+    final pattern = RegExp('[^a-zA-Z0-9]');
+    if (!pattern.hasMatch(sep)) {
+      sep = '-';
+    }
     final count = length < 4 ? 4 : length;
     final generate = List.generate(
       count,
-      (_) => englishWords[_secureRandom.nextInt(englishWords.length)],
+      (_) => _englishWords[_secureRandom.nextInt(_englishWords.length)],
     );
-    return generate.join(separator);
+    return capitalizeEachWord ? generate.map((e)=> e.doCapitalizeWord).join(sep) : generate.join(sep);
   }
 
   /// Always provide random password with minimal 8 character
@@ -36,14 +44,13 @@ class SecurityTools {
     const t = r'!@#$%^&*';
     const u = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const v = 'abcdefghijklmnopqrstuvwxyz';
-    final w = (v + u + t + s).split('')..shuffle(_secureRandom);
+    const w = v + u + t + s;
 
     final number = includeDigits ? s : '';
     final special = includeSpecialCharacter ? t : '';
     final upperAlp = includeUppercase ? u : '';
     final lowerAlp = includeLowecase ? v : '';
-    final combine = (lowerAlp + upperAlp + number + special).split('')
-      ..shuffle(_secureRandom);
+    final combine = lowerAlp + upperAlp + number + special;
 
     final finalString = combine.isNotEmpty ? combine : w;
 
@@ -75,4 +82,83 @@ class SecurityTools {
 
     return _uuid.v5(finalNameSpace, stringToBeEncrypted);
   }
+}
+
+double calculatePasswordStrength(String password) {
+  final length = password.length;
+  int complexity = 0;
+
+  // Check for different character types
+  bool hasLowercase = false;
+  bool hasUppercase = false;
+  bool hasDigit = false;
+  bool hasSpecialChar = false;
+
+  for (int i = 0; i < length; i++) {
+    final char = password[i];
+
+    if (char.contains(RegExp('[a-z]'))) {
+      hasLowercase = true;
+    } else if (char.contains(RegExp('[A-Z]'))) {
+      hasUppercase = true;
+    } else if (char.contains(RegExp('[0-9]'))) {
+      hasDigit = true;
+    } else {
+      hasSpecialChar = true;
+    }
+  }
+
+  // Increment complexity for each character type present
+  if (hasLowercase) complexity++;
+  if (hasUppercase) complexity++;
+  if (hasDigit) complexity++;
+  if (hasSpecialChar) complexity++;
+
+  // Calculate password strength
+  final strength = (length / 10) * complexity / 4;
+
+  // Ensure the strength is within the range of 0 to 1
+  return strength.clamp(0, 1);
+}
+
+double estimateBruteforceStrength(String password) {
+  if (password.isEmpty) return 0.0;
+
+  // Check which types of characters are used and create an opinionated bonus.
+  double charsetBonus;
+  if (RegExp(r'^[0-9]*$').hasMatch(password)) {
+    charsetBonus = 0.8;
+  } else if (RegExp(r'^[a-z]*$').hasMatch(password)) {
+    charsetBonus = 1.0;
+  } else if (RegExp(r'^[a-z0-9]*$').hasMatch(password)) {
+    charsetBonus = 1.2;
+  } else if (RegExp(r'^[a-zA-Z]*$').hasMatch(password)) {
+    charsetBonus = 1.3;
+  } else if (RegExp(r'^[a-z\-_!?]*$').hasMatch(password)) {
+    charsetBonus = 1.3;
+  } else if (RegExp(r'^[a-zA-Z0-9]*$').hasMatch(password)) {
+    charsetBonus = 1.5;
+  } else {
+    charsetBonus = 1.8;
+  }
+
+  double logisticFunction(double x) {
+    return 1.0 / (1.0 + exp(-x));
+  }
+
+  double curve(double x) {
+    return logisticFunction((x / 3.0) - 4.0);
+  }
+
+  return curve(password.length * charsetBonus);
+}
+
+double calculateEffectivePasswordStrength(String password) {
+  final bruteforceStrength = estimateBruteforceStrength(password);
+  final complexityStrength = calculatePasswordStrength(password);
+
+  // Weighted average of bruteforce strength and complexity strength
+  final effectiveStrength = (bruteforceStrength + complexityStrength) / 2;
+
+  return effectiveStrength;
 }
