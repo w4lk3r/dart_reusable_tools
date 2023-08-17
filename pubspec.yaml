@@ -1,15 +1,15 @@
 name: devsdocs_reusable_tools
-description: A starting point for Dart libraries or applications.
-version: 1.0.1
-# repository: https://github.com/my_org/my_repo
+description: Personal Reusable Tools. Feel free to modify.
+version: 1.0.2
+repository: https://github.com/devsdocs/dart_reusable_tools
 
 environment:
   sdk: ^3.0.6
 
-# Add regular dependencies here.
 dependencies:
   crypto:
   dio:
+  english_words_300k:
   jiffy:
   path:
   uuid:

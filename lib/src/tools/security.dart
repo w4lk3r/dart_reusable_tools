@@ -2,10 +2,7 @@ part of '../devsdocs_reusable_tools_base.dart';
 
 class SecurityTools {
   factory SecurityTools() => _instance ??= SecurityTools._internal();
-  SecurityTools._internal()
-      : _englishWords = File(
-          [current, 'lib', 'src', 'tools', 'words.txt'].joinPath,
-        ).readAsLinesSync();
+  SecurityTools._internal() : _englishWords = EnglishWords300k.words;
   static SecurityTools? _instance;
 
   final List<String> _englishWords;
