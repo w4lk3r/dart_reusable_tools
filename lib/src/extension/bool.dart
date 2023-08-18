@@ -7,5 +7,5 @@ extension BoolExt on bool? {
   /// either null or '1' or '0'
   String? get toStringFlagOrNull => this != null ? toStringFlag : null;
 
-  String get toCapitalizeString => '$this'.doCapitalizeWord;
+  String get toCapitalizeString => '$this'.capitalizeWord;
 }

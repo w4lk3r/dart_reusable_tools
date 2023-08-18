@@ -35,7 +35,7 @@ All extension have Async version if supported.
 
 ### Tools
 - `SecurityTools` class
-  - Object (=> double) `checkPasswordStrength(...)`: Check password strength in double, 0 to 1.
+  - Object (=> num) `checkPasswordStrength(...)`: Check password strength in double, 0 to 1.
   - Object (=> String) `generatePassphrase(...)`: Generate english words passphrase.
   - Object (=> String) `generatePassword(...)`: Generate password.
   - Object (=> String) `getUuidV5(...)`: Get Uuid V5

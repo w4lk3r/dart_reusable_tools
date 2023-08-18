@@ -15,9 +15,11 @@ extension ListOfStringExt on List<String> {
   String get joinDot => join('.');
   String get joinComma => join(',');
   String get joinSpace => join(' ');
+  String get getRandomItem => this[Random.secure().nextInt(length)];
 }
 
 extension IterableExt on Iterable<String> {
+  String get getRandomItem => toList()[Random.secure().nextInt(length)];
   String get joinSpace => toList().joinSpace;
 }
 

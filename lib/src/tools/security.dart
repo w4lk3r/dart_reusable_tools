@@ -2,43 +2,62 @@ part of '../reusable_tools_base.dart';
 
 class SecurityTools {
   factory SecurityTools() => _instance ??= SecurityTools._internal();
-  SecurityTools._internal() : _englishWords = EnglishWords300k.words;
+  SecurityTools._internal()
+      : _englishWords = EnglishWords300k.words,
+        _englishWordsLength = EnglishWords300k.words.length;
   static SecurityTools? _instance;
 
   final List<String> _englishWords;
 
-  /// Always provide passphrase with minimal 4 english words containing 4 letters
+  final int _englishWordsLength;
+
+  /// Always provide passphrase with minimal 4 and maximal 100 english words containing 4 letters or more
   ///
   /// [separator] always contain single character, if non special character detected, it will use default separator
   ///
-  /// The passphrase words produced is never repeated
+  /// The passphrase words produced is never repeated.
   String generatePassphrase({
     String separator = '-',
     int length = 4,
     bool capitalizeEachWord = false,
+    bool useNumberSuffix = false,
+    bool useSpecialCharacterSuffix = false,
   }) {
     String sep = separator.length > 1 ? separator[0] : separator;
     final pattern = RegExp('[^a-zA-Z0-9]');
     if (!pattern.hasMatch(sep)) {
       sep = '-';
     }
-    final count = max(length, 4);
+    final count = max(min(length, 100), 4);
+
+    Iterable<String> uniquePhrase;
+
+    uniquePhrase = _generateUniqueIndex(count).map((e) => _englishWords[e]);
+
+    if (useNumberSuffix) {
+      uniquePhrase = uniquePhrase.map((e) => [e, _number.getRandomItem].join());
+    }
+    if (useSpecialCharacterSuffix) {
+      uniquePhrase =
+          uniquePhrase.map((e) => [e, _specialChar.getRandomItem].join());
+    }
+    if (capitalizeEachWord) {
+      uniquePhrase = uniquePhrase.map((e) => e.capitalizeWord);
+    }
+
+    return uniquePhrase.join(sep);
+  }
+
+  List<int> _generateUniqueIndex(int count) {
     final generate = List.generate(
       count,
-      (_) => _englishWords[Random.secure().nextInt(_englishWords.length)],
+      (_) => _englishWordsLength.getRandomNumberFromZeroToThis,
     );
-
-    if (generate.toSet().length != generate.length) {
-      return generatePassphrase(
-        separator: separator,
-        length: length,
-        capitalizeEachWord: capitalizeEachWord,
-      );
-    } else {
-      return capitalizeEachWord
-          ? generate.map((e) => e.doCapitalizeWord).join(sep)
-          : generate.join(sep);
+    final set = generate.toSet();
+    if (set.length == count) {
+      return generate;
     }
+    return _generateUniqueIndex(count);
   }
 
   final _number = '0123456789';
@@ -46,7 +65,7 @@ class SecurityTools {
   final _uppercaseAlp = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   final _lowercaseAlp = 'abcdefghijklmnopqrstuvwxyz';
 
-  /// Always provide random password with minimal 8 character
+  /// Always provide random password with minimal 8 and maximal 100 character
   ///
   /// If all include option set to false, it will produce default behaviour (all include flags is true)
   String generatePassword({
@@ -74,25 +93,22 @@ class SecurityTools {
 
     final passwordCharacters = <String>[];
 
-    final effectiveLength = max(length, 8); // Ensure minimum length is 8
+    final effectiveLength = max(min(length, 100), 8);
 
     if (uppercase) {
-      passwordCharacters
-          .add(_uppercaseAlp[Random.secure().nextInt(_uppercaseAlp.length)]);
+      passwordCharacters.add(_uppercaseAlp.getRandomItem);
     }
 
     if (lowercase) {
-      passwordCharacters
-          .add(_lowercaseAlp[Random.secure().nextInt(_lowercaseAlp.length)]);
+      passwordCharacters.add(_lowercaseAlp.getRandomItem);
     }
 
     if (digits) {
-      passwordCharacters.add(_number[Random.secure().nextInt(_number.length)]);
+      passwordCharacters.add(_number.getRandomItem);
     }
 
     if (specialCharacter) {
-      passwordCharacters
-          .add(_specialChar[Random.secure().nextInt(_specialChar.length)]);
+      passwordCharacters.add(_specialChar.getRandomItem);
     }
 
     final remainingCharacters = (digits ? _number : '') +
@@ -101,10 +117,7 @@ class SecurityTools {
         (lowercase ? _lowercaseAlp : '');
 
     for (int i = passwordCharacters.length; i < effectiveLength; i++) {
-      passwordCharacters.add(
-        remainingCharacters[
-            Random.secure().nextInt(remainingCharacters.length)],
-      );
+      passwordCharacters.add(remainingCharacters.getRandomItem);
     }
 
     passwordCharacters.shuffle(Random.secure());
@@ -206,13 +219,13 @@ class SecurityTools {
   }
 
   /// The closest the result to 1, the better
-  double checkPasswordStrength(String password) {
+  num checkPasswordStrength(String password) {
     final bruteforceStrength = _estimateBruteforceStrength(password);
     final complexityStrength = _calculatePasswordStrength(password);
 
     // Weighted average of bruteforce strength and complexity strength
     final effectiveStrength = (bruteforceStrength + complexityStrength) / 2;
 
-    return effectiveStrength;
+    return effectiveStrength.toIntIfTrue;
   }
 }

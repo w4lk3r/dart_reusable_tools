@@ -28,11 +28,13 @@ extension StringExt on String {
   bool get containsSlash => contains('/');
   bool get containsBackSlash => contains(r'\');
 
-  String get doCapitalizeWord =>
+  String get capitalizeWord =>
       this[0].toUpperCase() + substring(1).toLowerCase();
 
-  String get doCapitalizeEachWordInSentence =>
-      doClean.splitSpace.map((e) => e.doCapitalizeWord).joinSpace;
+  String get capitalizeEachWordInSentence =>
+      clean.splitSpace.map((e) => e.capitalizeWord).joinSpace;
 
-  String get doClean => trim().replaceAll(RegExp(r'\s{2,}|[\t\r\n]'), ' ');
+  String get clean => trim().replaceAll(RegExp(r'\s{2,}|[\t\r\n]'), ' ');
+
+  String get getRandomItem => this[length.getRandomNumberFromZeroToThis];
 }
