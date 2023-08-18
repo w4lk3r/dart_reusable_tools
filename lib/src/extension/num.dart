@@ -16,7 +16,7 @@ extension IntExt on int {
   String get bytesToBinaryPrefix => _formatBytes(this, binaryPrefixes: true);
   String get bytesToSIUnit => _formatBytes(this, binaryPrefixes: false);
 
-  int get getRandomNumberFromZeroToThis => Random.secure().nextInt(this);
+  int get getRandomNumberFromZeroToLessThanThis => Random().nextInt(this);
 
   String _formatBytes(int bytes, {required bool binaryPrefixes}) {
     if (bytes <= 0) return 'Unknown Size';

@@ -11,7 +11,7 @@ class SecurityTools {
 
   final int _englishWordsLength;
 
-  /// Always provide passphrase with minimal 4 and maximal 100 english words containing 4 letters or more
+  /// Always provide passphrase with minimal 4 and maximal 50 english words containing 4 letters or more
   ///
   /// [separator] always contain single character, if non special character detected, it will use default separator
   ///
@@ -28,7 +28,7 @@ class SecurityTools {
     if (!pattern.hasMatch(sep)) {
       sep = '-';
     }
-    final count = max(min(length, 100), 4);
+    final count = max(min(length, 50), 4);
 
     Iterable<String> uniquePhrase;
 
@@ -51,7 +51,7 @@ class SecurityTools {
   List<int> _generateUniqueIndex(int count) {
     final generate = List.generate(
       count,
-      (_) => _englishWordsLength.getRandomNumberFromZeroToThis,
+      (_) => _englishWordsLength.getRandomNumberFromZeroToLessThanThis,
     );
     final set = generate.toSet();
     if (set.length == count) {
@@ -148,76 +148,6 @@ class SecurityTools {
     return _uuid.v5(finalNameSpace, stringToBeEncrypted);
   }
 
-  double _calculatePasswordStrength(String password) {
-    final length = password.length;
-    int complexity = 0;
-
-    // Check for different character types
-    bool hasLowercase = false;
-    bool hasUppercase = false;
-    bool hasDigit = false;
-    bool hasSpecialChar = false;
-
-    for (int i = 0; i < length; i++) {
-      if (hasSpecialChar && hasDigit && hasLowercase && hasUppercase) break;
-      final char = password[i];
-
-      if (char.contains(RegExp('[a-z]'))) {
-        hasLowercase = true;
-      } else if (char.contains(RegExp('[A-Z]'))) {
-        hasUppercase = true;
-      } else if (char.contains(RegExp('[0-9]'))) {
-        hasDigit = true;
-      } else {
-        hasSpecialChar = true;
-      }
-    }
-
-    // Increment complexity for each character type present
-    if (hasLowercase) complexity++;
-    if (hasUppercase) complexity++;
-    if (hasDigit) complexity++;
-    if (hasSpecialChar) complexity++;
-
-    // Calculate password strength
-    final strength = (length / 10) * complexity / 4;
-
-    // Ensure the strength is within the range of 0 to 1
-    return strength.clamp(0, 1);
-  }
-
-  double _estimateBruteforceStrength(String password) {
-    if (password.isEmpty) return 0.0;
-
-    // Check which types of characters are used and create an opinionated bonus.
-    double charsetBonus;
-    if (RegExp(r'^[0-9]*$').hasMatch(password)) {
-      charsetBonus = 0.8;
-    } else if (RegExp(r'^[a-z]*$').hasMatch(password)) {
-      charsetBonus = 1.0;
-    } else if (RegExp(r'^[a-z0-9]*$').hasMatch(password)) {
-      charsetBonus = 1.2;
-    } else if (RegExp(r'^[a-zA-Z]*$').hasMatch(password)) {
-      charsetBonus = 1.3;
-    } else if (RegExp(r'^[a-z\-_!?]*$').hasMatch(password)) {
-      charsetBonus = 1.3;
-    } else if (RegExp(r'^[a-zA-Z0-9]*$').hasMatch(password)) {
-      charsetBonus = 1.5;
-    } else {
-      charsetBonus = 1.8;
-    }
-
-    return _curve(password.length * charsetBonus);
-  }
-
-  double _logisticFunction(double x) {
-    return 1.0 / (1.0 + exp(-x));
-  }
-
-  double _curve(double x) {
-    return _logisticFunction((x / 3.0) - 4.0);
-  }
-
   /// The closest the result to 1, the better
   num checkPasswordStrength(String password) {
     final bruteforceStrength = _estimateBruteforceStrength(password);
@@ -229,3 +159,69 @@ class SecurityTools {
     return effectiveStrength.toIntIfTrue;
   }
 }
+
+double _calculatePasswordStrength(String password) {
+  final length = password.length;
+  int complexity = 0;
+
+  // Check for different character types
+  bool hasLowercase = false;
+  bool hasUppercase = false;
+  bool hasDigit = false;
+  bool hasSpecialChar = false;
+
+  for (int i = 0; i < length; i++) {
+    if (hasSpecialChar && hasDigit && hasLowercase && hasUppercase) break;
+    final char = password[i];
+
+    if (char.contains(RegExp('[a-z]'))) {
+      hasLowercase = true;
+    } else if (char.contains(RegExp('[A-Z]'))) {
+      hasUppercase = true;
+    } else if (char.contains(RegExp('[0-9]'))) {
+      hasDigit = true;
+    } else {
+      hasSpecialChar = true;
+    }
+  }
+
+  // Increment complexity for each character type present
+  if (hasLowercase) complexity++;
+  if (hasUppercase) complexity++;
+  if (hasDigit) complexity++;
+  if (hasSpecialChar) complexity++;
+
+  // Calculate password strength
+  final strength = (length / 10) * complexity / 4;
+
+  // Ensure the strength is within the range of 0 to 1
+  return strength.clamp(0, 1);
+}
+
+double _estimateBruteforceStrength(String password) {
+  if (password.isEmpty) return 0.0;
+
+  // Check which types of characters are used and create an opinionated bonus.
+  double charsetBonus;
+  if (RegExp(r'^[0-9]*$').hasMatch(password)) {
+    charsetBonus = 0.8;
+  } else if (RegExp(r'^[a-z]*$').hasMatch(password)) {
+    charsetBonus = 1.0;
+  } else if (RegExp(r'^[a-z0-9]*$').hasMatch(password)) {
+    charsetBonus = 1.2;
+  } else if (RegExp(r'^[a-zA-Z]*$').hasMatch(password)) {
+    charsetBonus = 1.3;
+  } else if (RegExp(r'^[a-z\-_!?]*$').hasMatch(password)) {
+    charsetBonus = 1.3;
+  } else if (RegExp(r'^[a-zA-Z0-9]*$').hasMatch(password)) {
+    charsetBonus = 1.5;
+  } else {
+    charsetBonus = 1.8;
+  }
+
+  return _curve(password.length * charsetBonus);
+}
+
+double _logisticFunction(double x) => 1.0 / (1.0 + exp(-x));
+
+double _curve(double x) => _logisticFunction((x / 3.0) - 4.0);
