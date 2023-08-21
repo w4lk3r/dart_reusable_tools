@@ -84,6 +84,8 @@ class _HttpClient {
 
   Interceptors get interceptors => _dio.interceptors;
 
+  Options get options => Options();
+
   Future<dynamic> downloadUri(
     Uri uri,
     File destinatonFile, {

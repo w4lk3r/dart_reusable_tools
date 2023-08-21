@@ -1,3 +1,5 @@
+## 1.0.6
+- Add Option getter
 ## 1.0.5
 - Add optional Option parameters to `NetworkTools` client GET method
 ## 1.0.4
