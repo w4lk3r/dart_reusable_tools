@@ -87,10 +87,12 @@ class _HttpClient {
   Future<dynamic> downloadUri(
     Uri uri,
     File destinatonFile, {
+    Options? options,
     required FileTransferProgress fileTransferProgress,
   }) =>
       download(
         '$uri',
+        options: options,
         destinatonFile,
         fileTransferProgress: fileTransferProgress,
       );
@@ -98,6 +100,7 @@ class _HttpClient {
   Future<dynamic> download(
     String path,
     File destinatonFile, {
+    Options? options,
     required FileTransferProgress fileTransferProgress,
   }) async {
     dynamic data;
@@ -106,6 +109,7 @@ class _HttpClient {
       return data = (await _dio.download(
         path,
         destinatonFile.path,
+        options: options,
         onReceiveProgress: (current, total) => transferProgress
             .add(fileTransferProgress.copyWith(current: current, total: total)),
       ))
@@ -140,13 +144,27 @@ class _HttpClient {
     }
   }
 
-  Future<String?> getUri(Uri uri) async => get('$uri');
+  Future<String?> getUri(
+    Uri uri, {
+    Options? options,
+  }) async =>
+      get(
+        '$uri',
+        options: options,
+      );
 
-  Future<String?> get(String path) async {
+  Future<String?> get(
+    String path, {
+    Options? options,
+  }) async {
     String? data;
 
     try {
-      return data = (await _dio.get<String>(path)).data;
+      return data = (await _dio.get<String>(
+        path,
+        options: options,
+      ))
+          .data;
     } on DioException catch (e) {
       return data = '$e';
     } catch (_) {

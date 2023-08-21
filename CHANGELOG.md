@@ -1,3 +1,5 @@
+## 1.0.5
+- Add optional Option parameters to `NetworkTools` client GET method
 ## 1.0.4
 - Add random getter on string and list of string
 - Add option to use number or special character suffix to passphrase
