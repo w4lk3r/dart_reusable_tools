@@ -26,6 +26,10 @@ extension IterableExt on Iterable<String> {
 
 extension ListOfMapOfStringDynamicExt on List<dynamic> {
   String get toJsonString => json.encode(this);
+  String get toJsonStringPretty {
+    const encoder = JsonEncoder.withIndent('  ');
+    return encoder.convert(this);
+  }
 }
 
 extension ListOfIntExt on List<int> {

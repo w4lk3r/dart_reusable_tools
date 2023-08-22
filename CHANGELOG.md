@@ -1,3 +1,5 @@
+## 1.0.7
+- Add `toJsonStringPretty` to List and Map for formatted JSON
 ## 1.0.6
 - Add Option getter
 ## 1.0.5
