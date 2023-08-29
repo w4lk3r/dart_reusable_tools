@@ -1,3 +1,5 @@
+## 1.0.8
+- Add `removeNullOrEmptyValue` on Map
 ## 1.0.7
 - Add `toJsonStringPretty` to List and Map for formatted JSON
 ## 1.0.6
