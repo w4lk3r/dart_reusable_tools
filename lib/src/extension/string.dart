@@ -23,6 +23,9 @@ extension StringExt on String {
   List<String> get splitSpace => split(' ');
 
   dynamic get toJsonObject => json.decode(this);
+  Map<String, dynamic> get toJsonObjectAsMap =>
+      toJsonObject as Map<String, dynamic>;
+  List<dynamic> get toJsonObjectAsList => toJsonObject as List<dynamic>;
 
   bool get containsDot => contains('.');
   bool get containsSlash => contains('/');

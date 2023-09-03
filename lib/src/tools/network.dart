@@ -84,6 +84,8 @@ class _HttpClient {
 
   Interceptors get interceptors => _dio.interceptors;
 
+  BaseOptions get baseOptions => _dio.options;
+
   Options get options => Options();
 
   Future<dynamic> downloadUri(
@@ -91,6 +93,7 @@ class _HttpClient {
     File destinatonFile, {
     Options? options,
     required FileTransferProgress fileTransferProgress,
+    bool useIsolate = false,
   }) =>
       download(
         '$uri',
@@ -104,18 +107,49 @@ class _HttpClient {
     File destinatonFile, {
     Options? options,
     required FileTransferProgress fileTransferProgress,
+    bool useIsolate = false,
   }) async {
     dynamic data;
+    ReceivePort? receivePort;
 
     try {
-      return data = (await _dio.download(
-        path,
-        destinatonFile.path,
-        options: options,
-        onReceiveProgress: (current, total) => transferProgress
-            .add(fileTransferProgress.copyWith(current: current, total: total)),
-      ))
-          .data;
+      if (useIsolate) {
+        receivePort = ReceivePort();
+        receivePort.listen((message) {
+          message as Map<int, int>;
+          transferProgress.add(
+            fileTransferProgress.copyWith(
+              current: message.keys.single,
+              total: message.values.single,
+            ),
+          );
+        });
+
+        await Isolate.spawn(
+          (data) async {
+            await _dio.download(
+              path,
+              destinatonFile.path,
+              options: options,
+              onReceiveProgress: (current, total) =>
+                  data.send({current: total}),
+            );
+          },
+          receivePort.sendPort,
+        );
+      } else {
+        await _dio.download(
+          path,
+          destinatonFile.path,
+          options: options,
+          onReceiveProgress: (current, total) => transferProgress.add(
+            fileTransferProgress.copyWith(
+              current: current,
+              total: total,
+            ),
+          ),
+        );
+      }
     } on DioException catch (e) {
       return data = e;
     } catch (_) {
@@ -149,24 +183,35 @@ class _HttpClient {
   Future<String?> getUri(
     Uri uri, {
     Options? options,
+    bool useIsolate = false,
   }) async =>
       get(
         '$uri',
         options: options,
+        useIsolate: useIsolate,
       );
 
   Future<String?> get(
     String path, {
     Options? options,
+    bool useIsolate = false,
   }) async {
     String? data;
 
     try {
-      return data = (await _dio.get<String>(
-        path,
-        options: options,
-      ))
-          .data;
+      return data = useIsolate
+          ? await Isolate.run(
+              () async => (await _dio.get<String>(
+                path,
+                options: options,
+              ))
+                  .data,
+            )
+          : (await _dio.get<String>(
+              path,
+              options: options,
+            ))
+              .data;
     } on DioException catch (e) {
       return data = '$e';
     } catch (_) {
@@ -205,9 +250,11 @@ class _HttpClient {
     FileTransferProgress? fileTransferProgress,
     Options? options,
     bool camelCaseContentDisposition = false,
+    bool useIsolate = false,
   }) async =>
       post(
         '$uri',
+        useIsolate: useIsolate,
         fields: fields,
         files: files,
         fileTransferProgress: fileTransferProgress,
@@ -222,6 +269,7 @@ class _HttpClient {
     FileTransferProgress? fileTransferProgress,
     Options? options,
     bool camelCaseContentDisposition = false,
+    bool useIsolate = false,
   }) async {
     final formData =
         FormData(camelCaseContentDisposition: camelCaseContentDisposition)
@@ -229,19 +277,70 @@ class _HttpClient {
           ..files.addAll(files ?? []);
 
     String? data;
+    ReceivePort? transferReceivePort;
+    ReceivePort? responseReceivePort;
 
     try {
-      return data = (await _dio.post<String>(
-        path,
-        data: formData,
-        options: options,
-        onSendProgress: fileTransferProgress != null
-            ? (current, total) => transferProgress.add(
-                  fileTransferProgress.copyWith(current: current, total: total),
-                )
-            : null,
-      ))
-          .data;
+      if (useIsolate) {
+        if (fileTransferProgress != null) {
+          final completer = Completer<String?>();
+          transferReceivePort = ReceivePort();
+          responseReceivePort = ReceivePort();
+          transferReceivePort.listen((message) {
+            message as Map<int, int>;
+            transferProgress.add(
+              fileTransferProgress.copyWith(
+                current: message.keys.single,
+                total: message.values.single,
+              ),
+            );
+          });
+          responseReceivePort.listen((message) {
+            message as String?;
+            completer.complete(message);
+          });
+
+          await Isolate.spawn(
+            (data) async {
+              final getData = await _dio.post<String>(
+                path,
+                data: formData,
+                options: options,
+                onSendProgress: (current, total) => data.send({current: total}),
+              );
+
+              responseReceivePort?.sendPort.send(getData.data);
+            },
+            transferReceivePort.sendPort,
+          );
+
+          return data = await completer.future;
+        } else {
+          return data = await Isolate.run(
+            () async => (await _dio.post<String>(
+              path,
+              data: formData,
+              options: options,
+            ))
+                .data,
+          );
+        }
+      } else {
+        return data = (await _dio.post<String>(
+          path,
+          data: formData,
+          options: options,
+          onSendProgress: fileTransferProgress != null
+              ? (current, total) => transferProgress.add(
+                    fileTransferProgress.copyWith(
+                      current: current,
+                      total: total,
+                    ),
+                  )
+              : null,
+        ))
+            .data;
+      }
     } on DioException catch (e) {
       return data = '$e';
     } catch (_) {
