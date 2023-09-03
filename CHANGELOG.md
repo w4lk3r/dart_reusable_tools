@@ -1,3 +1,5 @@
+## 1.0.10
+- Add optional data to post along with multipart/form-data
 ## 1.0.9
 - Add `useIsolate` agument to `NetworkTools` http
 - Add `toJsonObjectAsMap` and `toJsonObjectAsList` to String extension

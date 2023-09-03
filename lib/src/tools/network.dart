@@ -247,6 +247,7 @@ class _HttpClient {
     Uri uri, {
     List<MapEntry<String, String>>? fields,
     List<MapEntry<String, MultipartFile>>? files,
+    dynamic nonMultipartFormData,
     FileTransferProgress? fileTransferProgress,
     Options? options,
     bool camelCaseContentDisposition = false,
@@ -260,12 +261,14 @@ class _HttpClient {
         fileTransferProgress: fileTransferProgress,
         options: options,
         camelCaseContentDisposition: camelCaseContentDisposition,
+        nonMultipartFormData: nonMultipartFormData,
       );
 
   Future<String?> post(
     String path, {
     List<MapEntry<String, String>>? fields,
     List<MapEntry<String, MultipartFile>>? files,
+    dynamic nonMultipartFormData,
     FileTransferProgress? fileTransferProgress,
     Options? options,
     bool camelCaseContentDisposition = false,
@@ -275,6 +278,8 @@ class _HttpClient {
         FormData(camelCaseContentDisposition: camelCaseContentDisposition)
           ..fields.addAll(fields ?? [])
           ..files.addAll(files ?? []);
+
+    final dataToSend = nonMultipartFormData ?? formData;
 
     String? data;
     ReceivePort? transferReceivePort;
@@ -304,7 +309,7 @@ class _HttpClient {
             (data) async {
               final getData = await _dio.post<String>(
                 path,
-                data: formData,
+                data: dataToSend,
                 options: options,
                 onSendProgress: (current, total) => data.send({current: total}),
               );
@@ -319,7 +324,7 @@ class _HttpClient {
           return data = await Isolate.run(
             () async => (await _dio.post<String>(
               path,
-              data: formData,
+              data: dataToSend,
               options: options,
             ))
                 .data,
@@ -328,7 +333,7 @@ class _HttpClient {
       } else {
         return data = (await _dio.post<String>(
           path,
-          data: formData,
+          data: dataToSend,
           options: options,
           onSendProgress: fileTransferProgress != null
               ? (current, total) => transferProgress.add(
