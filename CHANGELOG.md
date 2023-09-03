@@ -1,3 +1,6 @@
+## 1.0.9
+- Add `useIsolate` agument to `NetworkTools` http
+- Add `toJsonObjectAsMap` and `toJsonObjectAsList` to String extension
 ## 1.0.8
 - Add `removeNullOrEmptyValue` on Map
 ## 1.0.7
