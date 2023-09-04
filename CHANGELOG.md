@@ -1,3 +1,5 @@
+## 1.0.11
+- Change all network response to dynamic
 ## 1.0.10
 - Add optional data to post along with multipart/form-data
 ## 1.0.9

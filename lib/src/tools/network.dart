@@ -157,22 +157,22 @@ class _HttpClient {
     }
   }
 
-  Future<String?> deleteUri(
+  Future<dynamic> deleteUri(
     Uri uri, {
     required String data,
     Options? options,
   }) async =>
       delete('$uri', data: data, options: options);
 
-  Future<String?> delete(
+  Future<dynamic> delete(
     String path, {
     required String data,
     Options? options,
   }) async {
-    String? data;
+    dynamic data;
     try {
       return data =
-          (await _dio.delete<String>(path, data: data, options: options)).data;
+          (await _dio.delete<dynamic>(path, data: data, options: options)).data;
     } on DioException catch (e) {
       return data = '$e';
     } catch (_) {
@@ -180,7 +180,7 @@ class _HttpClient {
     }
   }
 
-  Future<String?> getUri(
+  Future<dynamic> getUri(
     Uri uri, {
     Options? options,
     bool useIsolate = false,
@@ -191,23 +191,23 @@ class _HttpClient {
         useIsolate: useIsolate,
       );
 
-  Future<String?> get(
+  Future<dynamic> get(
     String path, {
     Options? options,
     bool useIsolate = false,
   }) async {
-    String? data;
+    dynamic data;
 
     try {
       return data = useIsolate
           ? await Isolate.run(
-              () async => (await _dio.get<String>(
+              () async => (await _dio.get<dynamic>(
                 path,
                 options: options,
               ))
                   .data,
             )
-          : (await _dio.get<String>(
+          : (await _dio.get<dynamic>(
               path,
               options: options,
             ))
@@ -219,23 +219,23 @@ class _HttpClient {
     }
   }
 
-  Future<String?> putUri(
+  Future<dynamic> putUri(
     Uri uri, {
     required String data,
     Options? options,
   }) async =>
       put('$uri', data: data, options: options);
 
-  Future<String?> put(
+  Future<dynamic> put(
     String path, {
     required String data,
     Options? options,
   }) async {
-    String? data;
+    dynamic data;
 
     try {
       return data =
-          (await _dio.put<String>(path, data: data, options: options)).data;
+          (await _dio.put<dynamic>(path, data: data, options: options)).data;
     } on DioException catch (e) {
       return data = '$e';
     } catch (_) {
@@ -243,7 +243,7 @@ class _HttpClient {
     }
   }
 
-  Future<String?> postUri(
+  Future<dynamic> postUri(
     Uri uri, {
     List<MapEntry<String, String>>? fields,
     List<MapEntry<String, MultipartFile>>? files,
@@ -264,7 +264,7 @@ class _HttpClient {
         nonMultipartFormData: nonMultipartFormData,
       );
 
-  Future<String?> post(
+  Future<dynamic> post(
     String path, {
     List<MapEntry<String, String>>? fields,
     List<MapEntry<String, MultipartFile>>? files,
@@ -281,14 +281,14 @@ class _HttpClient {
 
     final dataToSend = nonMultipartFormData ?? formData;
 
-    String? data;
+    dynamic data;
     ReceivePort? transferReceivePort;
     ReceivePort? responseReceivePort;
 
     try {
       if (useIsolate) {
         if (fileTransferProgress != null) {
-          final completer = Completer<String?>();
+          final completer = Completer<dynamic>();
           transferReceivePort = ReceivePort();
           responseReceivePort = ReceivePort();
           transferReceivePort.listen((message) {
@@ -307,7 +307,7 @@ class _HttpClient {
 
           await Isolate.spawn(
             (data) async {
-              final getData = await _dio.post<String>(
+              final getData = await _dio.post<dynamic>(
                 path,
                 data: dataToSend,
                 options: options,
@@ -322,7 +322,7 @@ class _HttpClient {
           return data = await completer.future;
         } else {
           return data = await Isolate.run(
-            () async => (await _dio.post<String>(
+            () async => (await _dio.post<dynamic>(
               path,
               data: dataToSend,
               options: options,
@@ -331,7 +331,7 @@ class _HttpClient {
           );
         }
       } else {
-        return data = (await _dio.post<String>(
+        return data = (await _dio.post<dynamic>(
           path,
           data: dataToSend,
           options: options,
