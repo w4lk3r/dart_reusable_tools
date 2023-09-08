@@ -124,7 +124,7 @@ class SecurityTools {
     return passwordCharacters.join();
   }
 
-  final _uuid = const Uuid(options: {'grng': UuidUtil.cryptoRNG});
+  final _uuid = Uuid(goptions: GlobalOptions(CryptoRNG()));
 
   String get getUuidV1 => _uuid.v1();
   String get getUuidV4 => _uuid.v4();

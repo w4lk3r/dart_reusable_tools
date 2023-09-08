@@ -8,8 +8,9 @@ import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:english_words_300k/english_words_300k.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:uuid/data.dart';
+import 'package:uuid/rng.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_util.dart';
 
 part 'extension/io.dart';
 part 'extension/list.dart';
@@ -19,6 +20,7 @@ part 'extension/string.dart';
 part 'extension/bool.dart';
 part 'extension/uri.dart';
 part 'extension/date_time.dart';
+part 'extension/dynamic.dart';
 
 part 'tools/security.dart';
 part 'tools/timer.dart';

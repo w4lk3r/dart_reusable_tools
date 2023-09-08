@@ -1,3 +1,6 @@
+## 1.0.12
+- Bump uuid to 4.0.0
+- Add `asMapOfStringDynamic` and `asListOfDynamic` to dynamic type
 ## 1.0.11
 - Change all network response to dynamic
 ## 1.0.10
