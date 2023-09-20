@@ -1,4 +1,4 @@
-## 1.0.12
+## 1.0.13
 - Refractoring
 - Add `ln`, `log2`, `log10` extension on `num`
 - Add `getRandomDouble` to `double` and `getRandomInt` to `int`
