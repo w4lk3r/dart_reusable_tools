@@ -39,6 +39,5 @@ extension StringExt on String {
 
   String get clean => trim().replaceAll(RegExp(r'\s{2,}|[\t\r\n]'), ' ');
 
-  String get getRandomItem =>
-      this[length.getRandomNumberFromZeroToLessThanThis];
+  String get getRandomItem => this[length.getRandomInt];
 }

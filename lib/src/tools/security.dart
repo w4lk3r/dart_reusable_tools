@@ -51,7 +51,7 @@ class SecurityTools {
   List<int> _generateUniqueIndex(int count) {
     final generate = List.generate(
       count,
-      (_) => _englishWordsLength.getRandomNumberFromZeroToLessThanThis,
+      (_) => _englishWordsLength.getRandomInt,
     );
     final set = generate.toSet();
     if (set.length == count) {

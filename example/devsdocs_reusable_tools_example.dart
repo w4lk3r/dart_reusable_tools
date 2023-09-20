@@ -1,6 +1,5 @@
-// import 'package:devsdocs_reusable_tools/devsdocs_reusable_tools.dart';
+import 'package:reusable_tools/reusable_tools.dart';
 
-// void main() {
-//   var awesome = Awesome();
-//   print('awesome: ${awesome.isAwesome}');
-// }
+void main() {
+  print(0.1.getRandomDouble);
+}

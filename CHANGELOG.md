@@ -1,4 +1,8 @@
 ## 1.0.12
+- Refractoring
+- Add `ln`, `log2`, `log10` extension on `num`
+- Add `getRandomDouble` to `double` and `getRandomInt` to `int`
+## 1.0.12
 - Bump uuid to 4.0.0
 - Add `asMapOfStringDynamic` and `asListOfDynamic` to dynamic type
 ## 1.0.11

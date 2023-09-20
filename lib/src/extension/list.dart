@@ -15,8 +15,7 @@ extension ListOfStringExt on List<String> {
   String get joinDot => join('.');
   String get joinComma => join(',');
   String get joinSpace => join(' ');
-  String get getRandomItem =>
-      this[length.getRandomNumberFromZeroToLessThanThis];
+  String get getRandomItem => this[length.getRandomInt];
 }
 
 extension IterableExt on Iterable<String> {
