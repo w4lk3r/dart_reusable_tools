@@ -1,6 +1,6 @@
 name: reusable_tools
 description: Personal Reusable Tools. Feel free to modify.
-version: 1.0.13
+version: 1.0.14
 repository: https://github.com/devsdocs/dart_reusable_tools
 
 environment:
