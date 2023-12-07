@@ -34,6 +34,8 @@ extension StringExt on String {
   String get capitalizeWord =>
       this[0].toUpperCase() + substring(1).toLowerCase();
 
+  String get snakeCase => this[0].toLowerCase() + substring(1);
+
   String get capitalizeEachWordInSentence =>
       clean.splitSpace.map((e) => e.capitalizeWord).joinSpace;
 

@@ -1,5 +1,7 @@
+## 1.0.16
+- Add `snakeCase` extension to `String`
 ## 1.0.15
-- 
+- Add `InMemoryCache` & `JsonPacker`
 ## 1.0.14
 - Exporting `Dio` 
 ## 1.0.13 
