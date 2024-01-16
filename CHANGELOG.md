@@ -1,10 +1,12 @@
+## 1.0.17
+- NetworkTools will be exported to another package
 ## 1.0.16
 - Add `snakeCase` extension to `String`
 ## 1.0.15
 - Add `InMemoryCache` & `JsonPacker`
 ## 1.0.14
-- Exporting `Dio` 
-## 1.0.13 
+- Exporting `Dio`
+## 1.0.13
 - Refractoring
 - Add `ln`, `log2`, `log10` extension on `num`
 - Add `getRandomDouble` to `double` and `getRandomInt` to `int`
