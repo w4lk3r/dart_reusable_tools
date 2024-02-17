@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 // import 'dart:isolate';
 import 'dart:math';
 
@@ -14,7 +13,6 @@ import 'package:uuid/uuid.dart';
 
 export 'tools/message_pack/comb.dart';
 
-part 'extension/io.dart';
 part 'extension/list.dart';
 part 'extension/map.dart';
 part 'extension/num.dart';
